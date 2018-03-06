@@ -1,7 +1,8 @@
 package dsheldon;
 
-import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Parser {
@@ -9,7 +10,7 @@ public class Parser {
     public static DataSet fromCSV(String text) {
         String[] lines = text.split("\n");
         Map<Integer, Klass> klasses = new HashMap<>();
-        Map<String, Row> people = new HashMap<>();
+        Map<String, Person> people = new HashMap<>();
         for (int row = 0; row < lines.length; row++) {
             String[] cells = lines[row].split(",");
 
@@ -33,11 +34,13 @@ public class Parser {
                     klasses.get(col).key = cells[col];
                 }
             }else if (row >= 4) {
-                Row person = new Row();
+                Person person = new Person();
                 person.key = cells[0];
                 for (int col = 2; col < cells.length; col++) {
-                    if (klasses.containsKey(col))
-                    person.requests.put(klasses.get(col), cells[col]);
+                    if (klasses.containsKey(col)) {
+                        person.requests.put(klasses.get(col), numerize(cells[col]));
+                        klasses.get(col).people.add(person);
+                    }
                 }
                 people.put(person.key, person);
             }
@@ -45,24 +48,31 @@ public class Parser {
         return new DataSet(klasses, people);
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(new File("test.txt")));
-        StringBuilder builder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line + "\n");
-        }
-        DataSet set = fromCSV(builder.toString());
-        System.out.println(set);
-        }
+    private static Integer numerize(String cell) {
+        if (cell == "H")
+            return 75;
+        if (cell == "M")
+            return 50;
+        if (cell == "L")
+            return 25;
+        if (cell == "X")
+            return -1000;
+        if (cell == "W")
+            return 1000;
+        if (cell == "Y")
+            return 1000;
+        if (cell == "")
+            return 0;
+        return 10;
+    }
 }
 
 class DataSet {
 
     Map<Integer, Klass> klasses;
-    Map<String, Row> people;
+    Map<String, Person> people;
 
-    public DataSet(Map<Integer, Klass> klasses, Map<String, Row> people) {
+    public DataSet(Map<Integer, Klass> klasses, Map<String, Person> people) {
         this.klasses = klasses;
         this.people = people;
     }
@@ -74,10 +84,13 @@ class Klass {
 
     // A or B
     String session;
+
+    List<Person> people = new ArrayList<>();
+    public boolean full = false;
 }
 
-class Row {
+class Person {
     String key;
 
-    Map<Klass, String> requests = new HashMap<>();
+    Map<Klass, Integer> requests = new HashMap<>();
 }

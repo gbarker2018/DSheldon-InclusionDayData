@@ -5,10 +5,10 @@ The Data
 * Y: They have to get it
 * S: Unknown (assume normal for now
 * dash: They did not fill out the form
-* blank: Below LOW
-* H: Students wants this course
-* M: Students do sortof wants this course
-* L: Students does not want this course
+* blank: Below LOW (0)
+* H: Students wants this course (75)
+* M: Students do sort of wants this course (50)
+* L: Students does not want this course (25)
 * Independent of each YOG
 
 Issues with the Data

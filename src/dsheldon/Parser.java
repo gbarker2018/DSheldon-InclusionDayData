@@ -49,19 +49,19 @@ public class Parser {
     }
 
     private static Integer numerize(String cell) {
-        if (cell == "H")
+        if (cell.equals("H"))
             return 75;
-        if (cell == "M")
+        if (cell.equals("M"))
             return 50;
-        if (cell == "L")
+        if (cell.equals("L"))
             return 25;
-        if (cell == "X")
+        if (cell.equals("X"))
             return -1000;
-        if (cell == "W")
+        if (cell.equals("W"))
             return 1000;
-        if (cell == "Y")
+        if (cell.equals("Y"))
             return 1000;
-        if (cell == "")
+        if (cell.equals(""))
             return 0;
         return 10;
     }
